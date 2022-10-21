@@ -1,0 +1,417 @@
+package animeware.ui;
+
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+
+import org.lwjgl.opengl.GL11;
+
+import animeware.Animeware;
+import animeware.hud.HUDConfigScreen;
+import animeware.hud.mod.HudMod;
+import animeware.ui.comp.Changelog;
+import animeware.ui.comp.ClickGUIButtonDark;
+import animeware.ui.comp.CosmeticsCGButton;
+import animeware.ui.comp.HomeCGButton;
+import animeware.ui.comp.InfoCGButton;
+import animeware.ui.comp.ServersCGButton;
+import animeware.ui.comp.SettingsCGButton;
+import animeware.ui.comp.ToggleableCGButton;
+import animeware.ui.comp.WebsiteCGButton;
+import animeware.util.font.FontUtil;
+import animeware.util.render.ColorMode;
+import animeware.util.render.ColorUtils;
+import animeware.util.render.DrawUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.server.MinecraftServer;
+
+public class ClickGUI2 extends GuiScreen{
+	/*     */   private final GuiScreen field_146598_a;
+	/*  40 */   private static String Cape = "Cape";
+	/*  41 */   private static String Wings = "Wings";
+	/*  42 */   private static String ToggleSprint = "Toggle Sprint";
+	/*  43 */   private static String Halo = "Halo";
+	/*  44 */   private static String FPS = "FPS";
+	/*  45 */   private static String Keystrokes = "Keystrokes";
+	/*  46 */   private static String Ping = "Ping";
+	/*  47 */   private static String ArmorStatus = "Armor Status";
+	/*  48 */   private static String Time = "Time";
+	/*  49 */   private static String PotionStatus = "Potion Status";
+	/*  50 */   private static String ModPosition = "ModPosition";
+	/*     */   
+	/*     */   private GuiButton field_146596_f;
+	/*     */   
+	/*     */   private GuiButton field_146597_g;
+	/*     */   
+	/*  56 */   private String field_146599_h = "survival";
+	/*     */   private boolean field_146600_i;
+	
+	public int x, y, w, h;
+	public HudMod m;
+	private boolean enabled;
+	/*     */   
+	/*     */   public ClickGUI2(GuiScreen p_i1055_1_) {
+	/*  60 */     this.field_146598_a = p_i1055_1_;
+	/*     */   } 
+	/*     */   public void initGui() {
+	             if (Animeware.TNTTimer) {
+		       this.buttonList.add(new ClickGUIButtonDark(1, this.width / 2 - 51, this.height / 2 - 30, 120, 20, 
+		             I18n.format("§4TNTTimer", new Object[0])));
+		     } else if (!Animeware.TNTTimer) {
+		       this.buttonList.add(new ClickGUIButtonDark(1, this.width / 2 - 51, this.height / 2 - 30, 120, 20, 
+		            I18n.format("TNTTimer", new Object[0])));
+		     }
+	             if (Animeware.BlockOverlayRed) {
+	         		       this.buttonList.add(new ClickGUIButtonDark(2, this.width / 2 - 51, this.height / 2 - 60, 120, 20, 
+	         		             I18n.format("§4BlockOverlay", new Object[0])));
+	         		     } else if (!Animeware.BlockOverlayRed) {
+	         		       this.buttonList.add(new ClickGUIButtonDark(2, this.width / 2 - 51, this.height / 2 - 60, 120, 20, 
+	         		             I18n.format("BlockOverlay", new Object[0])));
+	         		     }
+	             if (Animeware.BlockOverlayPurple) {
+       		       this.buttonList.add(new ClickGUIButtonDark(3, this.width / 2 - 51, this.height / 2 - 90, 120, 20, 
+       		             I18n.format("§4BlockOverlayPurple", new Object[0])));
+       		     } else if (!Animeware.BlockOverlayPurple) {
+       		       this.buttonList.add(new ClickGUIButtonDark(3, this.width / 2 - 51, this.height / 2 - 90, 120, 20, 
+       		             I18n.format("BlockOverlayPurple", new Object[0])));
+       		     }
+	             if (Animeware.BlockOverlayChroma) {
+       		       this.buttonList.add(new ClickGUIButtonDark(4, this.width / 2 - 51, this.height / 2 - 120, 120, 20, 
+       		             I18n.format("§4BlockOverlayChroma", new Object[0])));
+       		     } else if (!Animeware.BlockOverlayChroma) {
+       		       this.buttonList.add(new ClickGUIButtonDark(4, this.width / 2 - 51, this.height / 2 - 120, 120, 20, 
+       		             I18n.format("BlockOverlayChroma", new Object[0])));
+       		     }
+	             if (Animeware.ScrollZoom) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(5, this.width / 2 - 51, this.height / 2 - 0, 120, 20, 
+	       		             I18n.format("§4ScrollZoom", new Object[0])));
+	       		     } else if (!Animeware.ScrollZoom) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(5, this.width / 2 - 51, this.height / 2 - 0, 120, 20, 
+	       		             I18n.format("ScrollZoom", new Object[0])));
+	       		     }
+	             if (Animeware.itemphys) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(6, this.width / 2 - 51, this.height / 2 + 30, 120, 20, 
+	       		             I18n.format("§4Item Physics", new Object[0])));
+	       		     } else if (!Animeware.itemphys) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(6, this.width / 2 - 51, this.height / 2 + 30, 120, 20, 
+	       		             I18n.format("Item Physics", new Object[0])));
+	       		     }
+	             if (Animeware.MoreParticles) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(7, this.width / 2 - 51, this.height / 2 + 60, 120, 20, 
+	       		             I18n.format("§4More Particles", new Object[0])));
+	       		     } else if (!Animeware.MoreParticles) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(7, this.width / 2 - 51, this.height / 2 + 60, 120, 20, 
+	       		             I18n.format("More Particles", new Object[0])));
+	       		     }
+	             if (Animeware.SmallSword) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(8, this.width / 2 - 51, this.height / 2 + 90, 120, 20, 
+	       		             I18n.format("§4Small Sword", new Object[0])));
+	       		     } else if (!Animeware.SmallSword) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(8, this.width / 2 - 51, this.height / 2 + 90, 120, 20, 
+	       		             I18n.format("Small Sword", new Object[0])));
+	       		     }
+	             if (Animeware.SwordSpin) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(9, this.width / 2 - 51, this.height / 2 + 120, 120, 20, 
+	       		             I18n.format("§4Sword Spin", new Object[0])));
+	       		     } else if (!Animeware.SwordSpin) {
+	       		       this.buttonList.add(new ClickGUIButtonDark(9, this.width / 2 - 51, this.height / 2 + 120, 120, 20, 
+	       		             I18n.format("Sword Spin", new Object[0])));
+	       		     }
+	             
+	                this.buttonList.add(new HomeCGButton(100, 262, height / 3 - 50, ""));
+		     		this.buttonList.add(new SettingsCGButton(200, 262, height / 3 - 10, ""));
+		     		this.buttonList.add(new CosmeticsCGButton(300, 262, height / 3 + 30, ""));
+		     		this.buttonList.add(new ToggleableCGButton(400, 262, height / 3 + 70, ""));
+		     		this.buttonList.add(new ServersCGButton(500, 262, height / 3 + 110, ""));
+		     		this.buttonList.add(new WebsiteCGButton(600, 262, height / 3 + 150, ""));
+		     		this.buttonList.add(new InfoCGButton(700, 262, height / 3 + 190, ""));
+	             
+	/*     */     
+	/* 132 */     //this.buttonList.add(new GuiButton(1022, this.width / 2 - 91, this.height / 2 + 104, 180, 20, 
+	/* 133 */           //I18n.format("", new Object[0]))); 
+	/*     */   }
+	/*     */   protected void actionPerformed(GuiButton button) throws IOException {
+	/*     */     boolean flag, flag1;
+	/* 152 */     switch (button.id) {      
+	/*     */       case 1:
+	/* 198 */         Animeware.TNTTimer = !Animeware.TNTTimer;
+	/*     */         
+	/* 200 */         if (Animeware.TNTTimer) {
+	/* 201 */           this.buttonList.set(0, new ClickGUIButtonDark(1, this.width / 2 - 51, this.height / 2 - 30, 120, 20, 
+	/* 202 */                 I18n.format("§4TNTTimer", new Object[0])));
+	/* 203 */         } else if (!Animeware.TNTTimer) {
+	/* 204 */           this.buttonList.set(0, new ClickGUIButtonDark(1, this.width / 2 - 51, this.height / 2 - 30, 120, 20, 
+	/* 205 */                 I18n.format("TNTTimer", new Object[0])));
+	/*     */         } 
+	break;
+	                case 2:
+	                 Animeware.BlockOverlayRed = !Animeware.BlockOverlayRed;
+	/*     */         
+	/* 200 */         if (Animeware.BlockOverlayRed) {
+	/* 201 */           this.buttonList.set(1, new ClickGUIButtonDark(2, this.width / 2 - 51, this.height / 2 - 60, 120, 20, 
+	/* 202 */                 I18n.format("§4BlockOverlay", new Object[0])));
+	/* 203 */         } else if (!Animeware.BlockOverlayRed) {
+	/* 204 */           this.buttonList.set(1, new ClickGUIButtonDark(2, this.width / 2 - 51, this.height / 2 - 60, 120, 20, 
+	/* 205 */                 I18n.format("BlockOverlay", new Object[0])));
+	/*     */         }
+	break;
+	                case 3:
+		                 Animeware.BlockOverlayPurple = !Animeware.BlockOverlayPurple;
+		/*     */         
+		/* 200 */         if (Animeware.BlockOverlayPurple) {
+		/* 201 */           this.buttonList.set(2, new ClickGUIButtonDark(3, this.width / 2 - 51, this.height / 2 - 90, 120, 20, 
+		/* 202 */                 I18n.format("§4BlockOverlayPurple", new Object[0])));
+		/* 203 */         } else if (!Animeware.BlockOverlayPurple) {
+		/* 204 */           this.buttonList.set(2, new ClickGUIButtonDark(3, this.width / 2 - 51, this.height / 2 - 90, 120, 20, 
+		/* 205 */                 I18n.format("BlockOverlayPurple", new Object[0])));
+		/*     */         }
+		break;
+	                case 4:
+		                 Animeware.BlockOverlayChroma = !Animeware.BlockOverlayChroma;
+		/*     */         
+		/* 200 */         if (Animeware.BlockOverlayChroma) {
+		/* 201 */           this.buttonList.set(3, new ClickGUIButtonDark(4, this.width / 2 - 51, this.height / 2 - 120, 120, 20, 
+		/* 202 */                 I18n.format("§4BlockOverlayChroma", new Object[0])));
+		/* 203 */         } else if (!Animeware.BlockOverlayChroma) {
+		/* 204 */           this.buttonList.set(3, new ClickGUIButtonDark(4, this.width / 2 - 51, this.height / 2 - 120, 120, 20, 
+		/* 205 */                 I18n.format("BlockOverlayChroma", new Object[0])));
+		/*     */         }
+		break;
+	                case 5:
+		                 Animeware.ScrollZoom = !Animeware.ScrollZoom;
+		/*     */         
+		/* 200 */         if (Animeware.ScrollZoom) {
+		/* 201 */           this.buttonList.set(4, new ClickGUIButtonDark(5, this.width / 2 - 51, this.height / 2 - 0, 120, 20, 
+		/* 202 */                 I18n.format("§4ScrollZoom", new Object[0])));
+		/* 203 */         } else if (!Animeware.ScrollZoom) {
+		/* 204 */           this.buttonList.set(4, new ClickGUIButtonDark(5, this.width / 2 - 51, this.height / 2 - 0, 120, 20, 
+		/* 205 */                 I18n.format("ScrollZoom", new Object[0])));
+		/*     */         }
+		break;
+	                case 6:
+		                 Animeware.itemphys = !Animeware.itemphys;
+		/*     */         
+		/* 200 */         if (Animeware.itemphys) {
+		/* 201 */           this.buttonList.set(5, new ClickGUIButtonDark(6, this.width / 2 - 51, this.height / 2 + 30, 120, 20, 
+		/* 202 */                 I18n.format("§4Item Physics", new Object[0])));
+		/* 203 */         } else if (!Animeware.itemphys) {
+		/* 204 */           this.buttonList.set(5, new ClickGUIButtonDark(6, this.width / 2 - 51, this.height / 2 + 30, 120, 20, 
+		/* 205 */                 I18n.format("Item Physics", new Object[0])));
+		/*     */         }
+		break;
+	                case 7:
+		                 Animeware.MoreParticles = !Animeware.MoreParticles;
+		/*     */         
+		/* 200 */         if (Animeware.MoreParticles) {
+		/* 201 */           this.buttonList.set(6, new ClickGUIButtonDark(7, this.width / 2 - 51, this.height / 2 + 60, 120, 20, 
+		/* 202 */                 I18n.format("§4More Particles", new Object[0])));
+		/* 203 */         } else if (!Animeware.MoreParticles) {
+		/* 204 */           this.buttonList.set(6, new ClickGUIButtonDark(7, this.width / 2 - 51, this.height / 2 + 60, 120, 20, 
+		/* 205 */                 I18n.format("More Particles", new Object[0])));
+		/*     */         }
+		break;
+	                case 8:
+		                 Animeware.SmallSword = !Animeware.SmallSword;
+		/*     */         
+		/* 200 */         if (Animeware.SmallSword) {
+		/* 201 */           this.buttonList.set(7, new ClickGUIButtonDark(8, this.width / 2 - 51, this.height / 2 + 90, 120, 20, 
+		/* 202 */                 I18n.format("§4Small Sword", new Object[0])));
+		/* 203 */         } else if (!Animeware.SmallSword) {
+		/* 204 */           this.buttonList.set(7, new ClickGUIButtonDark(8, this.width / 2 - 51, this.height / 2 + 90, 120, 20, 
+		/* 205 */                 I18n.format("Small Sword", new Object[0])));
+		/*     */         }
+		break;
+	                case 9:
+		                 Animeware.SwordSpin = !Animeware.SwordSpin;
+		/*     */         
+		/* 200 */         if (Animeware.SwordSpin) {
+		/* 201 */           this.buttonList.set(8, new ClickGUIButtonDark(9, this.width / 2 - 51, this.height / 2 + 120, 120, 20, 
+		/* 202 */                 I18n.format("§4Sword Spin", new Object[0])));
+		/* 203 */         } else if (!Animeware.SwordSpin) {
+		/* 204 */           this.buttonList.set(8, new ClickGUIButtonDark(9, this.width / 2 - 51, this.height / 2 + 120, 120, 20, 
+		/* 205 */                 I18n.format("Sword Spin", new Object[0])));
+		/*     */         }
+		break;
+	                case 100: 
+	        			mc.displayGuiScreen(new ClickGUI());
+	        		break;
+	        	                case 200:
+	        			mc.displayGuiScreen(new HUDConfigScreen());
+	        			break;
+	        	                case 300:
+	        			mc.displayGuiScreen(new CosmeticGUI(null));
+	        			break;
+	        	                case 400:
+	        			mc.displayGuiScreen(new ClickGUI2(null));
+	        			break;
+	        	                case 500:
+	        			mc.displayGuiScreen(new GuiMultiplayerIngame());
+	        			break;
+	        		case 600:
+	        			try {
+	        	 			  Desktop desktop = java.awt.Desktop.getDesktop();
+	        	 			  URI oURL = new URI("http://hynomacka.ddns.net");
+	        	 			  desktop.browse(oURL);
+	        	 			} catch (Exception e) {
+	        	 			  e.printStackTrace();
+	        	 			}
+	        			break;
+	        		case 700:
+	        			mc.displayGuiScreen(new Changelog());
+	        			break;
+	                
+	/*     */ 
+	/*     */       
+	/*     */        
+       case 1022:
+         break;
+     }  //this.mc.displayGuiScreen(new HUDConfigScreen());
+   }
+	  
+   public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+     //drawDefaultBackground();
+	 //Minecraft.getMinecraft().entityRenderer.loadShader(new ResourceLocation("shaders/post/blur.json"));
+	 		//FontUtil.normal.drawString("Animeware", 340, 135, ColorMode.getWhiteColor()); 
+	 		GL11.glColor4f(1F, 1F, 1F, 1F);
+	 		//if(MinecraftServer.getServer().isSinglePlayer()) {
+	 		Playerdraw(370, 330, 25, 50, 0, mc.thePlayer);		
+	 		ScaledResolution sr = new ScaledResolution(mc);
+	 		/*Discord GUI:*/
+	 		//DrawUtil.drawRoundedRect(170, 60, sr.getScaledWidth() - 170, sr.getScaledHeight() - 100, 10, ColorMode.getClickGuiColor());
+	 		//DrawUtil.drawRoundedRect(200, 75, sr.getScaledWidth() - 460, sr.getScaledHeight() - 100, 12, ColorMode.getClickGuiMidColor());		
+	 	    //Gui.drawRect(300, 75, sr.getScaledWidth() - 170, sr.getScaledHeight() - 100, ColorMode.getClickGuiInnerColor());
+	 		//Gui.drawRect(195, 105, sr.getScaledWidth() - 170, sr.getScaledHeight() - 410, ColorMode.getClickGuiColor());
+	 		
+	 		//DrawUtil.drawRoundedRect(200, 115, sr.getScaledWidth() - 665, sr.getScaledHeight() - 375, 13, ColorMode.getClickGuiInnerColor());
+	 		//DrawUtil.drawRoundedRect(203, 110, sr.getScaledWidth() - 663, sr.getScaledHeight() - 385, 14, ColorMode.getClickGuiInnerColor());
+	 		//DrawUtil.drawRoundedRect(203, 110, sr.getScaledWidth() - 663, sr.getScaledHeight() - 385, 24, ColorMode.getClickGuiInnerColor());
+	 		//DrawUtil.drawRoundedRect(203, 110, sr.getScaledWidth() - 663, sr.getScaledHeight() - 385, 14, ColorMode.getClickGuiInnerColor());
+	 		//DrawUtil.drawRoundedRect(203, 210, sr.getScaledWidth() - 663, sr.getScaledHeight() - 395, 14, ColorMode.getClickGuiInnerColor());
+	 		
+	 		/*NetworkPlayerInfo playerinfo =
+	 				mc.getNetHandler().getPlayerInfo(player.getUniqueID());
+	 		if(playerinfo != null) {
+	 			mc.getTextureManager().bindTexture(playerinfo.getLocationSkin());
+	 			GL11.glColor4f(1F, 1F, 1F, 1F);
+	 			Gui.drawScaledCustomSizeModalRect((int) x -5, (int) y - 5, 8F, 8F, 8 , 8, 20, 20, 64F, 64F);
+	 		}*/
+	 		
+	 		DrawUtil.drawRoundedRect(312, 125, sr.getScaledWidth() - 220, sr.getScaledHeight() - 373, 18, ColorMode.getClickGuiMidColor());     //text bg
+	 		DrawUtil.drawRoundedRect(320, 150, sr.getScaledWidth() - 220, sr.getScaledHeight() - 130, 18, ColorMode.getClickGuiColor());       //side		
+	 		DrawUtil.drawRoundedRect(415, 120, sr.getScaledWidth() - 220, sr.getScaledHeight() - 130, 18, ColorMode.getClickGuiColor());      //main bg	
+	 		DrawUtil.drawRoundedRect(420, 125, sr.getScaledWidth() - 225, sr.getScaledHeight() - 135, 18, ColorMode.getClickGuiMidColor());  //main		
+	 		DrawUtil.drawRoundedRect(255, 120, sr.getScaledWidth() - 655, sr.getScaledHeight() - 130, 18, ColorMode.getClickGuiColor());      //second main bg
+	 		DrawUtil.drawRoundedRect(260, 125, sr.getScaledWidth() - 660, sr.getScaledHeight() - 135, 18, ColorMode.getClickGuiMidColor());  //second main
+	 		
+	 		
+	 		//GlStateManager.pushMatrix();
+	 		//GlStateManager.scale(0.8, 0.8, 0.8);
+	 		FontUtil.normal.drawString("Animeware", 340, 135, ColorMode.getRedColor()); 
+	 		//FontUtil.normal.drawString("A", 340, 135, ColorUtils.astolfoColors(0, 100, 400L));
+			//FontUtil.normal.drawString("n", 340 + 7, 135, ColorUtils.astolfoColors(0, 100, 300L));
+			//FontUtil.normal.drawString("i", 340 + 13, 135, ColorUtils.astolfoColors(0, 100, 200L));
+			//FontUtil.normal.drawString("m", 340 + 15, 135, ColorUtils.astolfoColors(0, 100, 100L));
+			//FontUtil.normal.drawString("e", 340 + 23, 135, ColorUtils.astolfoColors(0, 100, 0L));
+			//FontUtil.normal.drawString("w", 340 + 29, 135, ColorUtils.astolfoColors(0, 100, -100L));
+			//FontUtil.normal.drawString("a", 340 + 36, 135, ColorUtils.astolfoColors(0, 100, -200L));
+			//FontUtil.normal.drawString("r", 340 + 42, 135, ColorUtils.astolfoColors(0, 100, -300L));
+			//FontUtil.normal.drawString("e", 340 + 46, 135, ColorUtils.astolfoColors(0, 100, -400L));
+	 		//mc.getTextureManager().bindTexture(new ResourceLocation ("Animeware/text_white.png"));
+	 		//this.drawModalRectWithCustomSizedTexture(345, 95, 0, 0, 250, 250, 250, 250);
+     
+	   FontUtil.normal.drawString( "", this.width / 2 - 31, this.height / 2 - 120, 
+         -1);
+     super.drawScreen(mouseX, mouseY, partialTicks);		
+   }
+   public static void Playerdraw(int posX, int posY, int scale, float mouseX, float mouseY, EntityLivingBase ent)
+   {
+		if(MinecraftServer.getServer().isSinglePlayer()) {
+       GlStateManager.enableColorMaterial();
+       GlStateManager.pushMatrix();
+       GlStateManager.translate((float)posX, (float)posY, 50.0F);
+       GlStateManager.scale((float)(-65), (float)65, (float)65);
+       GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+       float f = ent.renderYawOffset;
+       float f1 = ent.rotationYaw;
+       float f2 = ent.rotationPitch;
+       float f3 = ent.prevRotationYawHead;
+       float f4 = ent.rotationYawHead;
+       GlStateManager.rotate(155.0F, 0.0F, 1.0F, 0.0F);
+       RenderHelper.enableStandardItemLighting();
+       GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+       GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+       ent.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
+       ent.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+       ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+       ent.rotationYawHead = ent.rotationYaw;
+       ent.prevRotationYawHead = ent.rotationYaw;
+       GlStateManager.translate(0.0F, 0.0F, 0.0F);
+       RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+       rendermanager.setPlayerViewY(180.0F);
+       rendermanager.setRenderShadow(false);
+       rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+       rendermanager.setRenderShadow(true);
+       ent.renderYawOffset = f;
+       ent.rotationYaw = f1;
+       ent.rotationPitch = f2;
+       ent.prevRotationYawHead = f3;
+       ent.rotationYawHead = f4;
+       GlStateManager.popMatrix();
+       RenderHelper.disableStandardItemLighting();
+       GlStateManager.disableRescaleNormal();
+       GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+       GlStateManager.disableTexture2D();
+       GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+   } else if(Minecraft.getMinecraft().getCurrentServerData() != null) {
+   	GlStateManager.enableColorMaterial();
+       GlStateManager.pushMatrix();
+       GlStateManager.translate((float)posX, (float)posY, 50.0F);
+       GlStateManager.scale((float)(-65), (float)65, (float)65);
+       GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+       float f = ent.renderYawOffset;
+       float f1 = ent.rotationYaw;
+       float f2 = ent.rotationPitch;
+       float f3 = ent.prevRotationYawHead;
+       float f4 = ent.rotationYawHead;
+       GlStateManager.rotate(155.0F, 0.0F, 1.0F, 0.0F);
+       RenderHelper.enableStandardItemLighting();
+       GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+       GlStateManager.rotate(-((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
+       ent.renderYawOffset = (float)Math.atan((double)(mouseX / 40.0F)) * 20.0F;
+       ent.rotationYaw = (float)Math.atan((double)(mouseX / 40.0F)) * 40.0F;
+       ent.rotationPitch = -((float)Math.atan((double)(mouseY / 40.0F))) * 20.0F;
+       ent.rotationYawHead = ent.rotationYaw;
+       ent.prevRotationYawHead = ent.rotationYaw;
+       GlStateManager.translate(0.0F, 0.0F, 0.0F);
+       RenderManager rendermanager = Minecraft.getMinecraft().getRenderManager();
+       rendermanager.setPlayerViewY(180.0F);
+       rendermanager.setRenderShadow(false);
+       rendermanager.renderEntityWithPosYaw(ent, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+       rendermanager.setRenderShadow(true);
+       ent.renderYawOffset = f;
+       ent.rotationYaw = f1;
+       ent.rotationPitch = f2;
+       ent.prevRotationYawHead = f3;
+       ent.rotationYawHead = f4;
+       GlStateManager.popMatrix();
+       RenderHelper.disableStandardItemLighting();
+       GlStateManager.disableRescaleNormal();
+       GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+       GlStateManager.disableTexture2D();
+       GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	} else {
+		
+	}
+   }
+}
+	
+
